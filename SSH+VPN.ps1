@@ -18,6 +18,7 @@ Write-Host "This is a script to automatically download SSH and setup a public au
 # }	
 
 
+$user_name = Read-Host "Enter your Windows username"
 
 
 # --------------- Add SSH login key into record --------------------
@@ -33,7 +34,7 @@ icacls administrators_authorized_keys /inheritance:r /grant "Administrators:F" /
 
 
 $psexecUrl = "https://download.sysinternals.com/files/PSTools.zip"
-$downloadFolder = "C:\Users\Admin\Downloads"  
+$downloadFolder = "C:\Users\$user_name\Downloads"  
 $zipFilePath = "$downloadFolder\PSTools.zip"
 $extractFolder = "$downloadFolder"  
 
@@ -46,7 +47,7 @@ Expand-Archive -Path $zipFilePath -DestinationPath $extractFolder
 
 Remove-Item -Path $zipFilePath
 
-Move-Item -Path "C:\Users\DELL\Downloads\PsExec.exe" -Destination "C:\Windows\System32" -Force
+Move-Item -Path "C:\Users\$user_name\Downloads\PsExec.exe" -Destination "C:\Windows\System32" -Force
 
 
 # --------------- Download SSH Server ------------------------------
