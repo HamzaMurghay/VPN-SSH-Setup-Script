@@ -18,7 +18,7 @@ Write-Host "This is a script to automatically download SSH and setup a public au
 # }	
 
 
-$user_name = Read-Host "Enter your Windows username"
+$user_name = Read-Host "Enter your Windows username`n`n"
 
 
 # --------------- Add SSH login key into record --------------------
@@ -84,21 +84,25 @@ Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath
 # Install Tailscale silently
 Start-Process -FilePath $installerPath -ArgumentList "/quiet" -Wait
 
-# Set Tailscale service to start automatically
 Set-Service -Name "Tailscale" -StartupType Automatic
-
-# Start the Tailscale service
 Start-Service -Name "Tailscale"
 
-# Confirm installation
 tailscale status
 
-Write-Host "`n`nNow all that's left for you to do is `n1) Login and Authenticate the email for VPN connection `n2) Run psexec and accept terms and conditions"
+
+Write-Host "`n`nNow all that's left for you to do is `n1) Login and Authenticate the email for VPN connection `n2) Run psexec and accept terms and conditions`n`n"
 
 Start-Sleep -Seconds 5  
 
 
-# Authenticate
-tailscale up
+$authMethod = Read-Host "How would you like to authenticate Tailscale? [1] Login via account credentials  [2] Use authentication key"
+
+if ($authMethod -eq "2") {
+    $authKey = Read-Host "Enter your Tailscale authentication key"
+    & tailscale up --authkey $authKey
+} else {
+    & tailscale up
+}
+
 
 # ------------------------------------------------------------------
